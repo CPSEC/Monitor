@@ -1,4 +1,4 @@
-data = {
+in_data = {
     "sensor": {
         "milliseconds": 10.0,
         "as5048a": 14.809030766707236,
@@ -41,5 +41,16 @@ data = {
         "sp": 6,
         "si": 7,
         "sd": 8
+    },
+    "image": {
+        # numpy array
     }
 }
+
+out_data = {'auto': 'false',
+            "servo": 1.5,
+            "throttle": 1.5,
+            "speed": 40,
+            "servo-PID": {"P": 0, "I": 0, "D": 0},
+            "throttle-PID": {"P": 0, "I": 0, "D": 0}
+            }
