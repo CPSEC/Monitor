@@ -15,7 +15,7 @@ sock = socket(AF_INET, SOCK_STREAM)
 sock.connect((HOST, PORT))
 sock.setblocking(False)
 cur = datetime.now()
-nxt = cur + timedelta(microseconds=10)
+nxt = cur + timedelta(microseconds=50)
 count = 0
 
 path = os.path.split(os.path.realpath(__file__))[0]
@@ -53,12 +53,12 @@ while True:
 
             message = (json.dumps(d_dict) + sep).encode()
             sock.sendall(message)
-            print('send', d_dict)
+            # print('send', d_dict)
 
-            nxt = nxt + timedelta(milliseconds=20)
+            nxt = nxt + timedelta(milliseconds=10)
             count += 1
 
-    if count > 1:
+    if count > 1000:
         break
 
 sock.close()
