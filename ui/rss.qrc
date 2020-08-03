@@ -1,0 +1,31 @@
+<RCC>
+  <qresource prefix="icon">
+    <file>image/save.png</file>
+    <file>image/adjustment.png</file>
+    <file>image/refresh.png</file>
+    <file>image/settings.png</file>
+    <file>image/stop.png</file>
+    <file>image/adjustment.png</file>
+    <file>image/like.png</file>
+    <file>image/link.png</file>
+    <file>image/lock.png</file>
+    <file>image/music.png</file>
+    <file>image/open.png</file>
+    <file>image/play.png</file>
+    <file>image/power.png</file>
+    <file>image/refresh.png</file>
+    <file>image/settings.png</file>
+    <file>image/stop.png</file>
+    <file>image/unlock.png</file>
+    <file>image/wifi_1.png</file>
+    <file>image/wifi_2.png</file>
+  </qresource>
+  <qresource prefix="btn">
+    <file>image/cancel.png</file>
+    <file>image/checked.png</file>
+    <file>image/computer.png</file>
+    <file>image/edit.png</file>
+    <file>image/reload.png</file>
+    <file>image/target.net.png</file>
+  </qresource>
+</RCC>
