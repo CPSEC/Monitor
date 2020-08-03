@@ -28,9 +28,17 @@ python test/client.py
 test/data_sample.py
 
 ## Key Features
+* parameter online adjustment, such as PID
 * plot sensor data
 * start/stop tcp listening
 * start/stop data recording
 * live camera video show
 * save/open csv file
 * reset data received
+
+## Tips
+There are some dependencies of operation.
+
+If you find a button is invalid, please pay attention to your order of operation.
+For example, we cannot open a csv file when receiving data; we cannot adjust PID parameters before the connection establishes.
+
