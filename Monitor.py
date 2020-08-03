@@ -52,6 +52,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         view = win.addViewBox()
         self.imv = pg.ImageItem()
         view.addItem(self.imv)
+        self.vcount = 0
 
         # ACTIONS
         self.actionListening.triggered.connect(self.start_server)
@@ -126,9 +127,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             data_print = json.dumps(data_dict['parameter'], indent=4)
             self.plainTextEdit.setPlainText(data_print)
         if 'image' in data_dict:
-            img_lst = data_dict['image']
-            img_np = np.array(img_lst)
-            self.imv.setImage(img_np)
+            self.vcount += 1
+            # for performance
+            if self.vcount % 5 == 0:
+                img_lst = data_dict['image']
+                img_np = np.array(img_lst)
+                self.imv.setImage(img_np)
 
     def slider_handle_1(self, val):
         # val 0-99
