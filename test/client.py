@@ -52,7 +52,13 @@ while True:
             d_dict = {'sensor': dict(zip(header, d)), 'parameter': p_dict, 'image': img.tolist()}
 
             message = (json.dumps(d_dict) + sep).encode()
-            sock.sendall(message)
+            while message:
+                try:
+                    sent = sock.send(message)
+                except BlockingIOError:
+                    pass
+                else:
+                    message = message[sent:]
             # print('send', d_dict)
 
             nxt = nxt + timedelta(milliseconds=10)
