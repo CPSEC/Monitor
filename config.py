@@ -8,3 +8,4 @@ x_1 = 'milliseconds'
 y_1 = 'as5048a'
 interv_1 = 500
 
+conn_timeout = 1000000

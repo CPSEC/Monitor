@@ -3,7 +3,7 @@ import socket
 import select
 import sys
 import queue
-
+from config import conn_timeout
 
 # tutorial : https://pymotw.com/2/select/
 
@@ -98,7 +98,7 @@ class Server(QRunnable):
 
                     else:
                         noDataCount[s] += 1
-                        if noDataCount[s] > 10000:
+                        if noDataCount[s] > conn_timeout:
                             self.signals.closed.emit(str(s.getpeername()))
                             if s in outputs:
                                 outputs.remove(s)
