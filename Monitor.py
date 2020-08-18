@@ -1,5 +1,6 @@
 import json
 import os
+import random
 import socket
 import sys
 import time
@@ -10,7 +11,7 @@ import numpy as np
 import pyqtgraph as pg
 from PyQt5.QtCore import QThreadPool
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog, QCheckBox, QVBoxLayout
 
 from config import header, port, sep, x_1, y_1, interv_1
 from model import DataModel
@@ -39,11 +40,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # for plot_1
         self.canvas_1 = pg.PlotWidget()
         self.canvas_1.setBackground("w")
-        pen = pg.mkPen(color=(255, 0, 0))
-        self.data_line_1 = self.canvas_1.plot(pen=pen)
+        self.canvas_1.addLegend()
         self.plot_1_canvas.addWidget(self.canvas_1)
         self.Slider_1.setValue(99)
         self.Slider_1.valueChanged.connect(self.slider_handle_1)
+        self.lines = []
+        self.y_1 = y_1
+        self.init_plot_1()
+
+        # checkbox for plot 1
+        self.plot_1_items = QVBoxLayout(self.scrollAreaWidgetContents_2)
+        self.checkboxes = []
+        for i in header:
+            if i in x_1:
+                continue
+            checkbox = QCheckBox(i)
+            if i in y_1:
+                checkbox.setChecked(True)
+            checkbox.stateChanged.connect(self.check1state)
+            self.plot_1_items.addWidget(checkbox)
+            self.checkboxes.append(checkbox)
 
         # live video
         win = pg.GraphicsLayoutWidget()
@@ -64,6 +80,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionSave.triggered.connect(self.file_save)
         self.actionTest.triggered.connect(self.send_data)
         self.actionAdjust.triggered.connect(self.show_control_panel)
+
+    def check1state(self, state):
+        self.y_1 = [c.text() for c in self.checkboxes if c.isChecked()]
+        self.statusbar.showMessage('plot '+str(self.y_1))
+        self.init_plot_1()
+
+    def init_plot_1(self):
+        self.canvas_1.clear()
+        self.lines = []
+        for y in self.y_1:
+            # plot each line
+            r = random.randrange(256)
+            g = random.randrange(256)
+            b = random.randrange(256)
+            pen = pg.mkPen(color=(r, g, b))
+            line = self.canvas_1.plot(name=y, pen=pen)
+            self.lines.append(line)
+
 
     def start_server(self):
         self.server = Server(self.message_queues, port=port, sep=sep)
@@ -105,15 +139,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def plot_last(self):
         data = self.model.df
-        data_x = data[x_1][-interv_1:].tolist()
-        data_y = data[y_1][-interv_1:].tolist()
-        self.data_line_1.setData(x=data_x, y=data_y)
+        for i, y in enumerate(self.y_1):
+            data_x = data[x_1][-interv_1:].tolist()
+            data_y = data[y][-interv_1:].tolist()
+            self.lines[i].setData(x=data_x, y=data_y)
 
     def plot_range(self, a, b):
         data = self.model.df
-        data_x = data[x_1][a:b].tolist()
-        data_y = data[y_1][a:b].tolist()
-        self.data_line_1.setData(x=data_x, y=data_y)
+        for i, y in enumerate(self.y_1):
+            data_x = data[x_1][a:b].tolist()
+            data_y = data[y][a:b].tolist()
+            self.lines[i].setData(x=data_x, y=data_y)
 
     def client_data(self, s):
         data_dict = json.loads(s)
@@ -163,7 +199,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def reset_data(self):
         self.model.clear()
-        self.data_line_1.setData([], [])
+        self.init_plot_1()
+        # self.data_line_1.setData([], [])
 
     def file_save(self):
         path = os.path.split(os.path.realpath(__file__))[0]
